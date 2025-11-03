@@ -1,0 +1,56 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Live Tracker";
+}
+
+<style>
+    body {
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        overflow: hidden; 
+        background-color: #f4f4f9;
+        font-family: Arial, sans-serif;
+    }
+
+    #tracker-dot {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: #e74c3c; /* Red dot */
+        border-radius: 50%;
+        transition: all 0.5s ease-out; /* Smooth movement */
+        box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+        /* Initial position (will be updated by JS) */
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 1;
+    }
+
+    #coordinates {
+        position: fixed;
+        bottom: 20px;
+        padding: 10px;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 10;
+    }
+</style>
+
+<div id="tracker-dot"></div>
+
+<div id="coordinates">
+    **Latitude:** <span id="lat">Waiting...</span><br>
+    **Longitude:** <span id="lon">Waiting...</span><br>
+    **Accuracy:** <span id="acc">...</span> meters
+</div>
+
+@section Scripts {
+    <script src="~/js/tracker.js"></script>
+}
