@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Live Tracker";
+    ViewData["Title"] = "Movement Box Tracker";
 }
 
 <style>
@@ -12,38 +12,55 @@
         align-items: center;
         justify-content: center;
         height: 100vh;
-        overflow: hidden; 
-        background-color: #f4f4f9;
+        overflow: hidden;
         font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
     }
 
+    /* 🆕 The new container for the dot (The "Box") */
+    #movement-box {
+        position: relative; /* All children (dot) will be positioned relative to this */
+        width: 300px; /* Fixed size for the box */
+        height: 300px;
+        border: 4px solid #3498db; /* Blue border */
+        background-color: #ecf0f1; /* Light gray background */
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        margin-bottom: 20px; /* Space between box and coordinates */
+    }
+
+    /* THE DOT - Positioned absolutely within the box */
     #tracker-dot {
         position: absolute;
         width: 20px;
         height: 20px;
-        background-color: #e74c3c; /* Red dot */
+        background-color: #e74c3c;
         border-radius: 50%;
-        transition: all 0.5s ease-out; /* Smooth movement */
+        transition: all 0.5s ease-out;
         box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
-        /* Initial position (will be updated by JS) */
+        /* Initial position: Center of the box */
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        z-index: 1;
+        z-index: 10;
     }
 
+    /* THE COORDINATE DISPLAY BOX */
     #coordinates {
-        position: fixed;
-        bottom: 20px;
-        padding: 10px;
+        position: relative; /* Changed from 'fixed' for simpler layout */
+        bottom: 0;
+        padding: 10px 20px;
         background-color: #fff;
         border-radius: 5px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         z-index: 10;
+        text-align: left;
     }
 </style>
 
-<div id="tracker-dot"></div>
+<div id="movement-box">
+    <div id="tracker-dot"></div>
+</div>
 
 <div id="coordinates">
     **Latitude:** <span id="lat">Waiting...</span><br>

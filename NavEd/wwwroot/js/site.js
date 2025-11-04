@@ -6,6 +6,11 @@ const accDisplay = document.getElementById('acc');
 let initialLat = null;
 let initialLon = null;
 
+// 🚨 MODIFIED SCALING FACTOR for the small box 🚨
+// This smaller value keeps the movement contained within the 300px box.
+const SCALING_FACTOR = 50000; 
+const MAX_OFFSET = 140; // Prevent dot from moving too far off the center of the 300px box (150px)
+
 function handleLocationUpdate(position) {
     const { latitude, longitude, accuracy } = position.coords;
 
@@ -17,34 +22,42 @@ function handleLocationUpdate(position) {
         dot.style.top = '50%';
     }
 
-    // 2. Calculate the change in position
-    // Scaling factor (e.g., 500000) converts coordinate difference to pixel shift
+    // 2. Calculate pixel movement based on coordinate change
     const deltaLat = latitude - initialLat;
     const deltaLon = longitude - initialLon;
-    const xOffset = deltaLon * 500000;
-    const yOffset = deltaLat * -500000; // Negative because higher latitude (North) is a lower 'top' value
+    
+    let xOffset = deltaLon * SCALING_FACTOR; 
+    let yOffset = deltaLat * -SCALING_FACTOR;
 
-    // 3. Update the dot's position using CSS transform
+    // 🆕 BOUNDARY CHECK: Clamp the offsets to prevent the dot from leaving the box
+    xOffset = Math.min(Math.max(xOffset, -MAX_OFFSET), MAX_OFFSET);
+    yOffset = Math.min(Math.max(yOffset, -MAX_OFFSET), MAX_OFFSET);
+
+    // 3. Move the dot (Visual Proof)
+    // The dot shifts relative to the box's center.
     dot.style.transform = `translate(calc(-50% + ${xOffset}px), calc(-50% + ${yOffset}px))`;
 
-    // 4. Update the display for verification
+    // 4. Update display and dot color (Feedback)
     latDisplay.textContent = latitude.toFixed(6);
     lonDisplay.textContent = longitude.toFixed(6);
     accDisplay.textContent = accuracy.toFixed(2);
-
+    
     // Change dot color based on accuracy
-    if (accuracy < 20) {
+    if (accuracy < 10) {
         dot.style.backgroundColor = '#2ecc71'; // Green: High accuracy
+    } else if (accuracy < 50) {
+        dot.style.backgroundColor = '#f39c12'; // Orange: Medium accuracy
     } else {
-        dot.style.backgroundColor = '#f39c12'; // Orange: Lower accuracy
+        dot.style.backgroundColor = '#e74c3c'; // Red: Low accuracy
     }
 }
 
 function handleLocationError(error) {
+    // ... (This function remains unchanged) ...
     let message = '';
     switch (error.code) {
         case error.PERMISSION_DENIED:
-            message = "User denied the request for Geolocation.";
+            message = "User denied Geolocation access.";
             break;
         case error.POSITION_UNAVAILABLE:
             message = "Location information is unavailable.";
@@ -55,21 +68,20 @@ function handleLocationError(error) {
         default:
             message = "An unknown error occurred.";
     }
-    latDisplay.textContent = `Error: ${message}`;
+    latDisplay.innerHTML = `**Error:** ${message}`;
 }
 
-// Check for Geolocation support and start tracking
+// Start continuous tracking
 if ("geolocation" in navigator) {
-    // Start continuous tracking with watchPosition()
     navigator.geolocation.watchPosition(
         handleLocationUpdate,
         handleLocationError,
         {
             enableHighAccuracy: true,
-            maximumAge: 0,
+            maximumAge: 0, 
             timeout: 5000
         }
     );
 } else {
-    latDisplay.textContent = "Geolocation is not supported by this browser.";
+    latDisplay.innerHTML = "Geolocation is not supported by this browser.";
 }
