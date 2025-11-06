@@ -1,4 +1,6 @@
-﻿const dot = document.getElementById('tracker-dot');
+﻿
+//aoigfyuae
+const dot = document.getElementById('tracker-dot');
 
 let initialLat = null;
 let initialLon = null;
