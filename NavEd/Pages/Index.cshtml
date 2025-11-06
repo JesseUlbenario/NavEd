@@ -1,56 +1,248 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Live Tracker";
+    ViewData["Title"] = "Movement Tracker with Profile";
 }
 
 <style>
+/* Style for the overall header container defined in _Layout.cshtml */
+#custom-profile-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 15px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    z-index: 999;
+}
+
+body {
+    padding-top: 110px;
+}
+
+
+#map-container {
+    background-image: url('/Sample_Map.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    position: fixed;
+    top: 110px;
+    left: 0;
+    width: 100vw;
+    height: calc(100vh - 110px);
+}
+
+
+#map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* make sure it fills screen */
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.profile-avatar {
+    display: flex;
+    align-items: center;
+}
+
+.profile-icon-large {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid #fff;
+}
+
+.profile-details {
+    flex-grow: 1;
+    padding: 0 15px;
+}
+
+.profile-name {
+    font-size: 1.1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin: 0;
+}
+
+.profile-info-item {
+    font-size: 0.9rem;
+    color: red;   /* or #e74c3c */
+    margin: 0;
+}
+
+.profile-info-item {
+    margin: 0;
+    font-size: 0.9em;
+    font-weight: normal;
+    color: #0F2233; /* Red text color for extra info (A222, ID) */
+}
+
+/* Menu Toggle Button Styling (Burger Icon) */
+.menu-toggle-button {
+    background-color: #8c8c8c; /* Grayish background for the button container */
+    border: none;
+    border-radius: 5px;
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    width: 50px; /* Wider button */
+    height: 50px;
+}
+
+.burger-icon {
+    display: block;
+    width: 100%;
+    height: 4px; /* Thickness of the bar */
+    background-color: white;
+    margin: 2px 0;
+    border-radius: 2px;
+}
+/* Ensure the main navigation bar is flexible to hold the content */
+.navbar {
+    display: flex !important; 
+    align-items: center !important;
+}
+
     body {
-        margin: 0;
+    margin: 0;
+    background-color: #f4f4f9;
+    font-family: Arial, sans-serif;
+}
+
+
+    #app-container {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
-        height: 100vh;
-        overflow: hidden; 
-        background-color: #f4f4f9;
-        font-family: Arial, sans-serif;
+        width: 100%;
+        max-width: 400px; /* Constrain the overall width for a mobile-like view */
     }
 
-    #tracker-dot {
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        background-color: #e74c3c; /* Red dot */
+    #profile-header {
+        background-color: #7f8c8d; /* Darker gray background */
+        color: white;
+        padding: 15px;
+        width: 100%;
+        border-radius: 8px 8px 0 0; /* Rounded top corners */
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+    }
+
+    .profile-icon {
+        width: 50px;
+        height: 50px;
         border-radius: 50%;
-        transition: all 0.5s ease-out; /* Smooth movement */
-        box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
-        /* Initial position (will be updated by JS) */
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        z-index: 1;
+        background-color: #bdc3c7; /* Light gray for avatar placeholder */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 24px;
+    }
+
+    .profile-info h3 {
+        margin: 0;
+        font-size: 1.1em;
+        font-weight: bold;
+    }
+
+    .profile-info p {
+        margin: 0;
+        font-size: 0.8em;
+        opacity: 0.8;
+    }
+
+    #search-bar {
+        position: fixed;
+        top: 115px;
+        left: 15px;
+        z-index: 9999;
+    }
+    
+    #search-bar input {
+        width: 100%;
+        padding: 8px;
+        border: 1px solid #bdc3c7;
+        border-radius: 5px;
+        font-size: 1em;
+        box-sizing: border-box;
     }
 
     #coordinates {
         position: fixed;
-        bottom: 20px;
-        padding: 10px;
-        background-color: #fff;
-        border-radius: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        top: calc(50vh + 40px); /* Just under center marker */
+        left: 50vw;
+        transform: translateX(-50%);
+        text-align: center;
+        background: #fff;
+        padding: 10px 20px;
+        border-radius: 6px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.15);
         z-index: 10;
     }
+
+    body {
+        padding-top: 100px; /* Header space */
+        margin: 0;
+        background-color: #f4f4f9;
+        font-family: Arial, sans-serif;
+    }
+
+#tracker-dot {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: #e74c3c;
+    border-radius: 50%;
+    transition: all 0.5s ease-out;
+    box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
+    z-index: 2;  /* keep above map */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+  
 </style>
 
-<div id="tracker-dot"></div>
+<div id="app-container">
 
-<div id="coordinates">
-    **Latitude:** <span id="lat">Waiting...</span><br>
-    **Longitude:** <span id="lon">Waiting...</span><br>
-    **Accuracy:** <span id="acc">...</span> meters
+    <!-- SEARCH BAR -->
+    <div id="search-bar">
+        <input type="text" placeholder="Search for locations or people..." />
+    </div>
+
+    <!-- DOT -->
+    <div id="map-container">
+    <div id="tracker-dot"></div>
+    </div>
+
+
+    <!-- COORDINATES -->
+    <div id="coordinates">
+        <strong>Latitude:</strong> <span id="lat">Waiting...</span><br>
+        <strong>Longitude:</strong> <span id="lon">Waiting...</span><br>
+        <strong>Accuracy:</strong> <span id="acc">...</span> meters
+    </div>
+
 </div>
 
+
 @section Scripts {
+    <!-- The tracker.js file remains unchanged -->
     <script src="~/js/tracker.js"></script>
 }

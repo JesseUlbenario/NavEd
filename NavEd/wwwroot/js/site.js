@@ -1,15 +1,15 @@
 ﻿const dot = document.getElementById('tracker-dot');
-const latDisplay = document.getElementById('lat');
-const lonDisplay = document.getElementById('lon');
-const accDisplay = document.getElementById('acc');
 
 let initialLat = null;
 let initialLon = null;
 
+const SCALING_FACTOR = 50000;
+const MAX_OFFSET = 140;
+
 function handleLocationUpdate(position) {
     const { latitude, longitude, accuracy } = position.coords;
 
-    // 1. Initialize the anchor point on the first run
+    // Set anchor point first time
     if (initialLat === null) {
         initialLat = latitude;
         initialLon = longitude;
@@ -17,50 +17,35 @@ function handleLocationUpdate(position) {
         dot.style.top = '50%';
     }
 
-    // 2. Calculate the change in position
-    // Scaling factor (e.g., 500000) converts coordinate difference to pixel shift
     const deltaLat = latitude - initialLat;
     const deltaLon = longitude - initialLon;
-    const xOffset = deltaLon * 500000;
-    const yOffset = deltaLat * -500000; // Negative because higher latitude (North) is a lower 'top' value
 
-    // 3. Update the dot's position using CSS transform
+    let xOffset = deltaLon * SCALING_FACTOR;
+    let yOffset = deltaLat * -SCALING_FACTOR;
+
+    // Clamp movement
+    xOffset = Math.min(Math.max(xOffset, -MAX_OFFSET), MAX_OFFSET);
+    yOffset = Math.min(Math.max(yOffset, -MAX_OFFSET), MAX_OFFSET);
+
+    // Move the dot
     dot.style.transform = `translate(calc(-50% + ${xOffset}px), calc(-50% + ${yOffset}px))`;
 
-    // 4. Update the display for verification
-    latDisplay.textContent = latitude.toFixed(6);
-    lonDisplay.textContent = longitude.toFixed(6);
-    accDisplay.textContent = accuracy.toFixed(2);
-
-    // Change dot color based on accuracy
-    if (accuracy < 20) {
-        dot.style.backgroundColor = '#2ecc71'; // Green: High accuracy
+    // Dot color based on accuracy
+    if (accuracy < 10) {
+        dot.style.backgroundColor = '#2ecc71'; // Green
+    } else if (accuracy < 50) {
+        dot.style.backgroundColor = '#f39c12'; // Orange
     } else {
-        dot.style.backgroundColor = '#f39c12'; // Orange: Lower accuracy
+        dot.style.backgroundColor = '#e74c3c'; // Red
     }
 }
 
 function handleLocationError(error) {
-    let message = '';
-    switch (error.code) {
-        case error.PERMISSION_DENIED:
-            message = "User denied the request for Geolocation.";
-            break;
-        case error.POSITION_UNAVAILABLE:
-            message = "Location information is unavailable.";
-            break;
-        case error.TIMEOUT:
-            message = "The request to get user location timed out.";
-            break;
-        default:
-            message = "An unknown error occurred.";
-    }
-    latDisplay.textContent = `Error: ${message}`;
+    console.warn("Location error:", error.message);
 }
 
-// Check for Geolocation support and start tracking
+// Start continuous tracking
 if ("geolocation" in navigator) {
-    // Start continuous tracking with watchPosition()
     navigator.geolocation.watchPosition(
         handleLocationUpdate,
         handleLocationError,
@@ -71,5 +56,5 @@ if ("geolocation" in navigator) {
         }
     );
 } else {
-    latDisplay.textContent = "Geolocation is not supported by this browser.";
+    console.warn("Geolocation is not supported by this browser.");
 }
