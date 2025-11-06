@@ -40,7 +40,7 @@
             </button>
         </div>
 
-        <!-- CALENDAR BUTTON (fixed, above header) -->
+        <!-- CALENDAR BUTTON -->
         <button id="calendar-button" class="calendar-button">
             <i class="bi bi-calendar-event"></i>
         </button>
@@ -53,6 +53,22 @@
             </div>
             <div id="events-list">
                 <!-- Populated in Index.cshtml -->
+            </div>
+        </div>
+
+        <!-- ADD EVENT BUTTON -->
+        <button id="add-button" class="add-button">
+            <i class="bi bi-plus"></i>
+        </button>
+
+        <!-- ADD PANEL -->
+        <div id="add-panel">
+            <div class="add-panel-header">
+                <h3>Add Event</h3>
+                <button id="close-add">&times;</button>
+            </div>
+            <div id="add-form">
+                <!-- Add form fields here -->
             </div>
         </div>
 
@@ -82,6 +98,9 @@
         &copy; 2025 - NavEd - <a href="#">Home</a>
     </footer>
 
-   @RenderSection("Scripts", required: false)
+    <!-- Scripts -->
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/tracker.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

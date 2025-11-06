@@ -68,7 +68,7 @@ body {
 
 /* ----------------------- Burger Menu ----------------------- */
 .menu-toggle-button {
-    position: fixed;
+    position: relative;
     top: 10px;
     right: 10px;
     font-size: 26px;
@@ -81,7 +81,7 @@ body {
     align-items: center;
     width: 50px;
     height: 50px;
-    z-index: 9999;
+    z-index: 9999 !important;
 }
 
 .burger-icon {
@@ -142,10 +142,22 @@ body {
     font-size: 18px;
 }
 
+#menu-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: none;
+    z-index: 9996;
+}
+
 .side-menu-header {
     display: flex;
     justify-content: space-between;
     padding: 10px;
+    z-index: 9997;
 }
 
 #close-menu {
@@ -156,22 +168,12 @@ body {
     cursor: pointer;
 }
 
-#menu-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: none;
-    z-index: 9997;
-}
-
 /* ----------------------- Calendar Button ----------------------- */
 .calendar-button {
     position: fixed;
     top: 15px;
-    right: 70px;
+    right: 50%;
+    transform: translateX(50%);
     font-size: 26px;
     background: none;
     border: none;
@@ -255,7 +257,7 @@ body {
     right: 0;
     transform: translateX(100%);
     transition: transform 0.3s ease;
-    z-index: 9998;
+    z-index: 9994;
     padding: 20px;
     box-sizing: border-box;
     overflow-y: auto;
@@ -292,3 +294,83 @@ body {
     color: white;
     cursor: pointer;
 }
+
+#add-panel {
+    width: 300px;
+    height: 100vh;
+    background: linear-gradient(to bottom, #73B6BC, #0F2233);
+    position: fixed;
+    top: 70px;
+    left: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+    z-index: 9995;
+    padding: 20px;
+    color: #fff;
+    overflow-y: auto;
+    pointer-events: auto;
+}
+
+    #add-panel.open {
+        transform: translateX(0);
+        pointer-events: none;
+        z-index: 9995;
+    }
+
+/* ----------------------- Events Buttons ----------------------- */
+#add-button {
+    position: fixed;
+    bottom: 30px; /* distance from bottom of viewport */
+    right: 20px; /* distance from right of viewport */
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: #73B6BC;
+    color: white;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    z-index: 10001; /* above everything */
+    transition: background 0.2s;
+}
+
+    #add-button:hover {
+        background-color: #5aa5a7;
+    }
+
+/* ----------------------- Search Bar ----------------------- */
+#search-bar {
+    position: fixed;
+    width: 300px;
+    top: 100px;
+    left: 15px;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    border-radius: 25px;
+    padding: 5px 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+    #search-bar input {
+        flex: 1;
+        border: none;
+        outline: none;
+        font-size: 1em;
+        padding: 8px 10px;
+        border-radius: 25px; /* Match the container */
+    }
+
+    #search-bar i {
+        margin-right: 8px;
+        color: #7f8c8d;
+        font-size: 1.1em;
+    }
+
+
+
