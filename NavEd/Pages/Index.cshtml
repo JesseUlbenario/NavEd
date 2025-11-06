@@ -210,7 +210,7 @@ body {
     border-radius: 50%;
     transition: all 0.5s ease-out;
     box-shadow: 0 0 10px rgba(231, 76, 60, 0.7);
-    z-index: 2;  /* keep above map */
+    z-index: 9999;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
@@ -230,17 +230,6 @@ body {
     <div id="map-container">
     <div id="tracker-dot"></div>
     </div>
-
-
-    <!-- COORDINATES -->
-    <div id="coordinates">
-        <strong>Latitude:</strong> <span id="lat">Waiting...</span><br>
-        <strong>Longitude:</strong> <span id="lon">Waiting...</span><br>
-        <strong>Accuracy:</strong> <span id="acc">...</span> meters
-    </div>
-
-</div>
-
 
 @section Scripts {
     <!-- The tracker.js file remains unchanged -->
