@@ -53,7 +53,7 @@ if ("geolocation" in navigator) {
         handleLocationError,
         {
             enableHighAccuracy: true,
-            maximumAge: 0,
+            maximumAge: 0, 
             timeout: 5000
         }
     );
